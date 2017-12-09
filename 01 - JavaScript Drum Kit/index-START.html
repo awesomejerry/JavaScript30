@@ -58,7 +58,39 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  window.addEventListener('load', () => {
+    const $keys = document.querySelectorAll('.key')
+    const $audios = document.querySelectorAll('audio')
 
+    const keyCodes = []
+    $keys.forEach($key => keyCodes.push(+$key.getAttribute('data-key')))
+
+    const keyMap = []
+    $keys.forEach($key => {
+      keyMap[+$key.getAttribute('data-key')] = $key
+    })
+
+    const audioMap = {}
+    $audios.forEach($audio => {
+      audioMap[+$audio.getAttribute('data-key')] = $audio
+    })
+
+    window.addEventListener('keydown', (e) => {
+      const { keyCode } = e
+      if (keyCodes.indexOf(keyCode) !== -1) {
+        audioMap[keyCode].load()
+        audioMap[keyCode].play()
+        keyMap[keyCode].classList.add('playing')
+      }
+    })
+
+    window.addEventListener('keyup', (e) => {
+      const { keyCode } = e
+      if (keyCodes.indexOf(keyCode) !== -1) {
+        keyMap[keyCode].classList.remove('playing')
+      }
+    })
+  })
 </script>
 
 
