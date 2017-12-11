@@ -62,13 +62,47 @@
       background:black;
       position: absolute;
       top:50%;
+
+      transition: transform 200ms cubic-bezier(0, 1.5, 0.85, 1);
+      transform-origin: 100%;
     }
 
   </style>
 
   <script>
+    const CIRCLE = 360
+    const DIFF_DEG = 90
 
+    window.addEventListener('load', () => {
+      const $hourHand = document.querySelector('.hour-hand')
+      const $minHand = document.querySelector('.min-hand')
+      const $secondHand = document.querySelector('.second-hand')
 
+      const COUNTS = { hour: 0, minute: 0, second: 0 }
+
+      const setRotate = ($ele, angle) => $ele.style.transform = `rotate(${angle}deg)`
+
+      const tick = () => {
+        const now = new Date()
+        const hour = now.getHours()
+        const minute = now.getMinutes()
+        const second = now.getSeconds()
+        if (hour === 24) {
+          COUNTS['hour'] += 1
+        }
+        if (minute === 0) {
+          COUNTS['minute'] += 1
+        }
+        if (second === 0) {
+          COUNTS['second'] += 1
+        }
+        setRotate($hourHand, ((hour + COUNTS['hour'] * 24) * CIRCLE / 12 + (minute / 60)) + DIFF_DEG)
+        setRotate($minHand, ((minute + COUNTS['minute'] * 60 ) * CIRCLE / 60 + (second / 60)) + DIFF_DEG)
+        setRotate($secondHand, (second + COUNTS['second'] * 60) * CIRCLE / 60 + DIFF_DEG)
+      }
+
+      setInterval(tick, 1000, true)
+    })
   </script>
 </body>
 </html>
